@@ -5,6 +5,8 @@ base_path = getcwd()
 # временные константы
 BACKGROUND_COLOR = (0, 0, 0)
 
+TILE_SIZE = 75
+
 
 # класс настроек проекта
 class ConfigurationProject:
@@ -12,4 +14,6 @@ class ConfigurationProject:
         # константы окна
         self.FPS = 60
 
-        self.WINDOW_SIZE = (800, 600)
+        self.WINDOW_SIZE = (1200, 900)
+
+        self.TILE_SIZE = 75
