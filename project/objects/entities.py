@@ -32,31 +32,18 @@ class User(BaseEntity):
             (self.x * self.size, self.y * self.size, self.size, self.size)
         )
 
-
-    def bellman_ford(self, graph, vertices, source):
-        distance = [float('inf')] * vertices
-        distance[source] = 0
-
-        for _ in range(vertices - 1):
-            for u, v, weight in graph:
-                if distance[u] != float('inf') and distance[u] + weight < distance[v]:
-                    distance[v] = distance[u] + weight
-
-        for u, v, weight in graph:
-            if distance[u] != float('inf') and distance[u] + weight < distance[v]:
-                raise ValueError("Graph contains negative weight cycle")
-
-        return distance
-
     def move(self):
         mouse_pos = pygame.mouse.get_pos()
         mouse_event = pygame.mouse.get_pressed()
 
+        # FIXME: хитбокс справа не правильный
         mouse_rect = Rect(mouse_pos[0], mouse_pos[1], 25, 25)
 
         rect = pygame.Rect(self.x * self.size, self.y * self.size, self.size, self.size)
 
-        if time.time() - self.last_time > 0.1:
+        # FIXME: работает не стабильно, бывает, появляется возможность ходить несколько раз
+        # FIXME: переделать movement_flag
+        if time.time() - self.last_time > 0.15:
             if self.movement_flag:
                 if mouse_event[0]:
                     self.x = mouse_pos[0] // self.size
@@ -68,8 +55,7 @@ class User(BaseEntity):
                 self.color = (0, 100, 255)
                 if mouse_event[0]:
                     self.movement_flag = not self.movement_flag
-            else:
-                self.color = (0, 255, 100)
+            elif not self.movement_flag:
+                self.color = (25, 255, 10)
             self.last_time = time.time()
-
 
