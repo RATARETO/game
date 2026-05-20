@@ -15,10 +15,12 @@ config = ConfigurationProject()
 
 display = pygame.display.set_mode(config.WINDOW_SIZE)
 
+pygame.display.set_caption("мопсGAMING")
+
 debug_tools = DebuggingTools(display)
 clock = pygame.time.Clock()
 
-user = User(1, 3, 75)
+user = User(4, 3, config.TILE_SIZE)
 
 
 while True:
@@ -27,12 +29,15 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            user.move()
+
     user.draw(display)
-    user.move()
+
     # debug
     debug_tools.grid.draw()
-    debug_tools.graph.draw_edges()
-    debug_tools.graph.draw_vertexes()
+    # debug_tools.graph.draw_edges()
+    # debug_tools.graph.draw_vertexes()
 
     clock.tick(60)
     pygame.display.update()

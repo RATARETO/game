@@ -67,21 +67,6 @@ class Map:
 
         return edges
 
-    def bellman_ford(self, vertices, source):
-        distance = [float('inf')] * vertices
-        distance[source] = 0
-
-        for _ in range(vertices - 1):
-            for u, v, weight in graph:
-                if distance[u] != float('inf') and distance[u] + weight < distance[v]:
-                    distance[v] = distance[u] + weight
-
-        for u, v, weight in graph:
-            if distance[u] != float('inf') and distance[u] + weight < distance[v]:
-                raise ValueError("Graph contains negative weight cycle")
-
-        return distance
-
 
 if __name__ == '__main__':
     map = Map()

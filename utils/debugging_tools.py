@@ -12,19 +12,28 @@ class Grid:
         self.screen = screen
 
     def draw(self):
-        for i in range(config.WINDOW_SIZE[1] // config.TILE_SIZE):
-            for j in range(config.WINDOW_SIZE[0] // config.TILE_SIZE):
-                pygame.draw.line(
-                    self.screen,
-                    (40, 40, 40),
-                    (config.TILE_SIZE * j, 0),
-                    (config.TILE_SIZE * j, config.WINDOW_SIZE[1])
-                )
+        # оптимизировал
+        wight_grid, height_grid = config.MAP_WEIGHT, config.MAP_HEIGHT  # в клетках
+
+        start_width, end_width = config.MAP_START_X, wight_grid  # в клетках
+        start_height, end_height = config.MAP_START_Y, height_grid  # в клетках
+
+        # горизонтальные линии
+        for i in range(0, end_width + 1):
             pygame.draw.line(
                 self.screen,
                 (40, 40, 40),
-                (0, config.TILE_SIZE * i),
-                (config.WINDOW_SIZE[0], config.TILE_SIZE * i)
+                (start_width * config.TILE_SIZE, (start_height + i) * config.TILE_SIZE),
+                ((start_width + end_width) * config.TILE_SIZE, (start_height + i) * config.TILE_SIZE)
+            )
+
+        # вертикальные линии
+        for i in range(0, end_width + 1):
+            pygame.draw.line(
+                self.screen,
+                (40, 40, 40),
+                ((start_width + i) * config.TILE_SIZE, config.TILE_SIZE * start_height),
+                ((start_width + i) * config.TILE_SIZE, config.TILE_SIZE * (start_height + end_height))
             )
 
 
