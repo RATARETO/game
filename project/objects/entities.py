@@ -11,15 +11,15 @@ config = ConfigurationProject()
 
 
 class BaseEntity:
-    def __init__(self, x, y, size):
+    def __init__(self, x, y, size, movement_count=3.0):
         self.x = x
         self.y = y
         self.size = size
 
 
 class User(BaseEntity):
-    def __init__(self, x, y, size):
-        super().__init__(x, y, size)
+    def __init__(self, x, y, size, id, movement_count=3.0):
+        super().__init__(x, y, size, movement_count)
 
         self.color = (0, 255, 100)
 
@@ -30,6 +30,12 @@ class User(BaseEntity):
         self.last_time_to_move = time.time()
 
         self.movement_flag = False
+
+        self.movement_count = movement_count
+
+        self.is_move = True
+
+        self.id = id
 
     def draw(self, screen):
         # mops
@@ -49,7 +55,7 @@ class User(BaseEntity):
         mouse_event = pygame.mouse.get_pressed()
 
         # FIXME: хитбокс справа не правильный
-        mouse_rect = Rect(mouse_pos[0], mouse_pos[1], 25, 25)
+        mouse_rect = Rect(mouse_pos[0], mouse_pos[1], 5, 5)
 
         rect = pygame.Rect(self.x * self.size, self.y * self.size, self.size, self.size)
 
@@ -62,13 +68,17 @@ class User(BaseEntity):
 
         # FIXME: работает не стабильно, бывает, появляется возможность ходить несколько раз
         # FIXME: переделать movement_flag
+        # FIXME: перенести перемещение в менеджер сущностей
+        # FIXME: убрать возможность встать на занятое место
+
         if time.time() - self.last_time > 0.15:
-            if self.movement_flag:
+            if self.movement_flag and not rect.colliderect(mouse_rect):
                 if mouse_event[0] and mouse_rect.colliderect(rect_grid):
                     self.x = mouse_pos[0] // self.size
                     self.y = mouse_pos[1] // self.size
 
                     self.movement_flag = False
+                    self.is_move = False
             self.last_time = time.time()
 
         if time.time() - self.last_time_to_move > 0.15:
@@ -76,6 +86,7 @@ class User(BaseEntity):
                 self.color = (0, 100, 255)
                 if mouse_event[0] and mouse_rect.colliderect(rect_grid):
                     self.movement_flag = (lambda x: not x)(self.movement_flag)
+
             elif not self.movement_flag:
                 self.color = (25, 255, 10)
 
