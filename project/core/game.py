@@ -44,7 +44,7 @@ class Game:
                 self.grid.draw()
 
                 for controlled_entity in self.controlled_entities:
-                    controlled_entity[1].render(controlled_entity[0])
+                    controlled_entity.renderer.render(controlled_entity.model)
                     # print(controlled_entity[0].start_index_direction_of_view)
 
             if self.controller.state == "game over":

@@ -1,8 +1,9 @@
 import pygame
+from project.command.history import History
 
 
 class InputHandler:
-    def __init__(self):
+    def __init__(self, history):
         self._mouse_left_button = False
         self._escape = False
 
@@ -10,14 +11,28 @@ class InputHandler:
 
         self.commands = {}
 
+        self.history = history
+
     def bind(self, key: int, command):
         self.commands[key] = command
 
     def handle_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
+            # 1. Сначала обрабатываем специальные клавиши управления историей
+            if event.key == pygame.K_z:
+                self.history.undo()
+                return  # ВАЖНО: выходим, чтобы не выполнять команду из словаря
+
+            if event.key == pygame.K_y:
+                self.history.redo()
+                return  # ВАЖНО: выходим
+
+            # 2. Затем обрабатываем обычные игровые команды
             if event.key in self.commands:
                 command = self.commands[event.key]
-                command.execute()
+                if command is not None:
+                    self.history.execute(command)
+                    print(command)
 
     def update(self):
         self._mouse_left_button = False

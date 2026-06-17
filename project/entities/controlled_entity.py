@@ -24,7 +24,7 @@ class ControllerControlledEntity(BaseEntityController):
         print("update")
 
 
-class RenderControlledEntity(BaseEntityRenderer):
+class RenderControlledEntity:
     def __init__(self, window):
         self.window = window
 
@@ -71,7 +71,7 @@ class RenderControlledEntity(BaseEntityRenderer):
         self._draw_direction_of_view(player)
 
 
-class ControlledEntity(BaseEntity):
+class ModelControlledEntity(BaseEntity):
     """Модель сущности, управляемой игроком"""
     def __init__(
             self,
@@ -93,3 +93,14 @@ class ControlledEntity(BaseEntity):
 
         self.health = health
         self.damage = damage
+
+
+class ControlledEntity:
+    def __init__(self, model, renderer, controller):
+        self.model = model
+
+        self.renderer = renderer
+        self.controller = controller
+
+
+

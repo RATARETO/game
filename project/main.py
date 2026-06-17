@@ -11,7 +11,12 @@ from project.map.grid import Grid
 
 from project.command.move_command import RightTurnCommand, LeftTurnCommand
 
-from project.entities.controlled_entity import ControllerControlledEntity, RenderControlledEntity, ControlledEntity
+from project.entities.controlled_entity import (ControllerControlledEntity,
+                                                RenderControlledEntity,
+                                                ModelControlledEntity,
+                                                ControlledEntity)
+
+from project.command.history import History
 
 
 def main():
@@ -19,19 +24,29 @@ def main():
     pygame.font.init()
 
     window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    input_handler = InputHandler()
+
+    history = History()
+    input_handler = InputHandler(history)
 
     # инициализация управляемых сущностей
     controlled_entities = []
 
-    controlled_entity = ControlledEntity(10, 10, TILE_SIZE, (100, 200, 0), 3, 1)
+    controlled_entity_model = ModelControlledEntity(10, 10, TILE_SIZE, (100, 200, 0), 3, 1)
     controlled_entity_render = RenderControlledEntity(window)
-    controlled_entity_controller = ControllerControlledEntity(controlled_entity)
+    controlled_entity_controller = ControllerControlledEntity(controlled_entity_model)
 
-    controlled_entities.append([controlled_entity, controlled_entity_render, controlled_entity_controller])
+    controlled_entity = ControlledEntity(
+        controlled_entity_model,
+        controlled_entity_render,
+        controlled_entity_controller)
+
+    controlled_entities.append(controlled_entity)
     # привязка команд к кнопкам
     input_handler.bind(pygame.K_d, RightTurnCommand(controlled_entity_controller))
     input_handler.bind(pygame.K_a, LeftTurnCommand(controlled_entity_controller))
+
+    input_handler.bind(pygame.K_z, history.undo())
+    input_handler.bind(pygame.K_y, history.redo())
 
     controller = Controller()
 
