@@ -45,10 +45,10 @@ class Button:
 
         # TODO: вынести константы
         if self.active:
-            pygame.draw.rect(window, (61, 76, 252), (self.x, self.y, self.width, self.height))
+            # pygame.draw.rect(window, (61, 76, 252), (self.x, self.y, self.width, self.height))
             pygame.draw.rect(window, self.color, (self.x, self.y, self.width - step, self.height - step))
         else:
-            pygame.draw.rect(window, (172, 217, 248), (self.x, self.y, self.width, self.height))
+            # pygame.draw.rect(window, (172, 217, 248), (self.x, self.y, self.width, self.height))
             pygame.draw.rect(window, self.color, (self.x + step, self.y + step, self.width - step, self.height - step))
 
         # TODO: вынести константы

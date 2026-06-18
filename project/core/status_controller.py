@@ -1,4 +1,4 @@
-# TODO: сделать адекватный контроллер
+# TODO: вынести self.state в Game
 class Controller:
     def __init__(self):
         self.state = "menu"  # menu, game, game over, exit

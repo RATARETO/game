@@ -1,11 +1,8 @@
 import pygame
-from project.menu.button import Button
-
-from project.core.input_handler import InputHandler
 
 
 class Game:
-    def __init__(self, window, input_handler, menu, controller, grid, controlled_entities):
+    def __init__(self, window, input_handler, menu, controller, grid, controlled_entities, ui, queue, enemies, map):
 
         self.window = window
         self.clock = pygame.time.Clock()
@@ -19,6 +16,13 @@ class Game:
         self.grid = grid
 
         self.controlled_entities = controlled_entities
+
+        self.ui = ui
+        self.queue = queue
+
+        self.enemies = enemies
+
+        self.map = map
 
     def run(self):
         while True:
@@ -38,14 +42,20 @@ class Game:
 
             if self.controller.state == "game":
                 # обработка логики
+                self.ui.update(self.input_handler, self.input_handler.mouse_position)
+
                 if self.input_handler.escape:
                     self.controller.state = "menu"
                 # отрисовка
                 self.grid.draw()
+                self.ui.draw(self.window)
 
                 for controlled_entity in self.controlled_entities:
                     controlled_entity.renderer.render(controlled_entity.model)
                     # print(controlled_entity[0].start_index_direction_of_view)
+
+                for enemy in self.enemies:
+                    enemy.renderer.render(enemy.model)
 
             if self.controller.state == "game over":
                 pass
