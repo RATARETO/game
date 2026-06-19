@@ -10,7 +10,7 @@ from project.core.status_controller import Controller
 from project.map.grid import Grid
 from project.map.map import Map
 
-from project.command.move_command import RightTurnCommand, LeftTurnCommand, SetMoveStateCommand
+from project.command.move_command import RightTurnCommand, LeftTurnCommand, MoveCommand
 
 from project.entities.entity import ControllerEntity, RenderEntity, ModelEntity, ControlledEntity
 
@@ -46,14 +46,14 @@ def main():
         controlled_entity_controller)
 
     controlled_entities.append(controlled_entity)
-    map.set_point(10, 10)
+    map.set_point(10, 10, controlled_entity)
 
     # враги
     enemies = []
 
     enemy_model = ModelEntity(12, 13, TILE_SIZE, (255, 200, 0), 3, 1, "enemy")
     enemy_render = RenderEntity(window)
-    enemy_controller = ControllerEntity(controlled_entity_model)
+    enemy_controller = ControllerEntity(enemy_model)
 
     enemy = ControlledEntity(
         enemy_model,
@@ -61,15 +61,14 @@ def main():
         enemy_controller)
 
     enemies.append(enemy)
-    map.set_point(12, 13)
+    map.set_point(12, 13, enemy)
 
     # привязка команд к кнопкам
-    input_handler.bind(pygame.K_d, RightTurnCommand(controlled_entity_controller))
-    input_handler.bind(pygame.K_a, LeftTurnCommand(controlled_entity_controller))
+    input_handler.bind(pygame.K_d, RightTurnCommand, entity_controller=controlled_entity_controller)
+    input_handler.bind(pygame.K_a, LeftTurnCommand, entity_controller=controlled_entity_controller)
 
-    # input_handler.bind(pygame.K_SPACE, SetMoveStateCommand(controlled_entity_controller))
-
-    input_handler.bind(pygame.K_SPACE, AttackCommand(controlled_entity, map, [controlled_entity]))
+    # input_handler.bind(pygame.K_SPACE, MoveCommand, entity=controlled_entity, game_map=map)
+    input_handler.bind(pygame.K_SPACE, AttackCommand, entity=controlled_entity, game_map=map)
 
     controller = Controller()
 
@@ -146,7 +145,7 @@ def main():
     menu = MainMenu(start_button, load_button, author_button, exit_button)
 
     grid = Grid(window)
-    game = Game(window, input_handler, menu, controller, grid, controlled_entities, ui, queue, enemies, map)
+    game = Game(window, input_handler, menu, controller, grid, ui, queue, map)
 
     game.run()
 

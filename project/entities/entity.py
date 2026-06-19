@@ -115,6 +115,10 @@ class ControllerEntity:
     def attack(self, entities):
         pass
 
+    def get_damage(self, damage):
+        self.player.health -= damage
+        print(self.player.name, "получил", damage, "урона")
+
 
 class ControlledEntity:
     def __init__(self, model, renderer, controller):

@@ -11,10 +11,13 @@ class InputHandler:
 
         self.commands = {}
 
+        self.commands_args = {}
+
         self.history = history
 
-    def bind(self, key: int, command):
+    def bind(self, key: int, command, **kwargs):
         self.commands[key] = command
+        self.commands_args[command] = kwargs
 
     def handle_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
@@ -30,8 +33,11 @@ class InputHandler:
             # 2. Затем обрабатываем обычные игровые команды
             if event.key in self.commands:
                 command = self.commands[event.key]
+
+                command_args = self.commands_args[command]
+
                 if command is not None:
-                    self.history.execute(command)
+                    self.history.execute(command(**command_args))
                     print(command)
 
     def update(self):
