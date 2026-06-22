@@ -3,9 +3,9 @@ class History:
         self._stack_undo = []
         self._stack_redo = []
 
-    def execute(self, command):
+    def execute(self, command, record=True):
         command.execute()
-        if command.applied:
+        if record and command.applied:
             self._stack_undo.append(command)
             self._stack_redo.clear()
 
